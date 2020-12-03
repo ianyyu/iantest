@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "contosoanalytics"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"CosmosDBLink_connectionString": {
+			"value": ""
+		},
+		"Source Datasets Josh_accountKey": {
+			"value": ""
+		},
+		"Tutorial_Synapse_accountKey": {
+			"value": ""
+		},
+		"contosoanalytics-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"dangitbugbash-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://agbugbash20200507storage.dfs.core.windows.net"
+		},
+		"Source Datasets Josh_properties_typeProperties_url": {
+			"value": "https://jocaplansynapse.dfs.core.windows.net/"
+		},
+		"Source Datasets_sasUri": {
+			"value": ""
+		},
+		"Tutorial_Synapse_properties_typeProperties_url": {
+			"value": "https://contosolake.dfs.core.windows.net"
+		},
+		"bing-covid-19-data_sasUri": {
+			"value": ""
+		},
+		"contosoanalytics-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://contosolake.dfs.core.windows.net"
+		},
+		"covid-tracking_sasUri": {
+			"value": ""
+		},
+		"dangitbugbash-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://dansynapsestroage.dfs.core.windows.net"
+		}
+	}
+}
