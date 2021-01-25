@@ -1,0 +1,11 @@
+{
+	"name": "contosoanalytics-WorkspaceDefaultStorage",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"typeProperties": {
+			"url": "https://contosolake.dfs.core.windows.net"
+		},
+		"type": "AzureBlobFS",
+		"annotations": []
+	}
+}

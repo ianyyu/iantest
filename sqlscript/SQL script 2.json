@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 1",
+	"name": "SQL script 2",
 	"properties": {
 		"content": {
-			"query": "-- type your sql script here, we now have intellisense\n",
+			"query": "-- type your sql script here, we now have intellisense\nselect top adfasdf ",
 			"metadata": {
 				"language": "sql"
 			},

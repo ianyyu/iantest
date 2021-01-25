@@ -1,0 +1,61 @@
+{
+	"name": "FirstCopyActivity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_5yx",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "datasets/NYCTaxiSample/"
+					},
+					{
+						"name": "Destination",
+						"value": "datasets/nyctaxismall/"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_5yx",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_5yx",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2020-03-12T04:54:43Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

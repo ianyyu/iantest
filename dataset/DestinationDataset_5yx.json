@@ -1,0 +1,21 @@
+{
+	"name": "DestinationDataset_5yx",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Tutorial_Synapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "nyctaxismall",
+				"fileSystem": "datasets"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

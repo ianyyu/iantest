@@ -1,0 +1,430 @@
+{
+	"name": "CosmosDBLink",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "contosospark",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/58f8824d-32b0-4825-9825-02fa6a801546/resourceGroups/Contoso/providers/Microsoft.Synapse/workspaces/contosoanalytics/bigDataPools/contosospark",
+				"name": "contosospark",
+				"type": "Spark",
+				"endpoint": "https://contosoanalytics.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/contosospark",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 5,
+				"cores": 4,
+				"memory": 28
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"![Overview](https://labigniteadls02.blob.core.windows.net/pictures/CosmosDB_Synapse.png)"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Spark demo items\n",
+					"\n",
+					"* Read into a dataframe from Cosmos DB as a linked service\n",
+					"* Create a Spark table pointing to Cosmos DB (unmanaged table)\n",
+					"* Do some data transformation (Flatten nested structure, explode arrays)\n",
+					"* Write curated data back into Cosmos DB (OLTP store) with Spark\n",
+					"\n",
+					"**With the latest and simplest connector from Spark**\n",
+					"\n",
+					"This work spans across Cosmos DB, Spark, ADF, Synapse UX, Synapse Platform through different functions (Dev, Design and PM)"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"diagram": {
+						"activateDiagramType": 1,
+						"chartConfig": {
+							"category": "bar",
+							"keys": [],
+							"values": [],
+							"yLabel": "",
+							"xLabel": "",
+							"aggregation": "SUM",
+							"aggByBackend": false
+						},
+						"previewData": {
+							"filter": null
+						},
+						"aggData": "{}",
+						"isSummary": false,
+						"isSql": true
+					}
+				},
+				"source": [
+					"%%sql\n",
+					"DROP TABLE default.DemoCosmosDB"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_retail_data = spark.read.option(\"spark.cosmos.synapse.linkedServiceName\" , \"CosmosDBLink\")\\\n",
+					"        .option(\"spark.cosmos.region\", \"west us 2\")\\\n",
+					"        .option(\"spark.cosmos.databaseName\", \"sample-db-001\")\\\n",
+					"        .option(\"spark.cosmos.containerName\", \"sample-container-001\")\\\n",
+					"        .format(\"cosmos.olap\").load()"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"diagram": {
+						"activateDiagramType": 1,
+						"chartConfig": {
+							"category": "bar",
+							"keys": [
+								"_rid"
+							],
+							"values": [
+								"_rid"
+							],
+							"yLabel": "_rid",
+							"xLabel": "_rid",
+							"aggregation": "COUNT",
+							"aggByBackend": false
+						},
+						"previewData": {
+							"filter": null
+						},
+						"aggData": "{\"_rid\":{\"o9tdAL4WfHEDAAAAAAAAAA==\":1,\"o9tdAL4WfHEFAAAAAAAAAA==\":1,\"o9tdAL4WfHEGAAAAAAAAAA==\":1,\"o9tdAL4WfHEHAAAAAAAAAA==\":1,\"o9tdAL4WfHEIAAAAAAAAAA==\":1,\"o9tdAL4WfHEJAAAAAAAAAA==\":1,\"o9tdAL4WfHEKAAAAAAAAAA==\":1,\"o9tdAL4WfHELAAAAAAAAAA==\":1,\"o9tdAL4WfHEMAAAAAAAAAA==\":1,\"o9tdAL4WfHENAAAAAAAAAA==\":1}}",
+						"isSummary": false,
+						"isSql": false
+					}
+				},
+				"source": [
+					"display(df_retail_data.limit(10))"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_retail_data.printSchema()"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Create a Spark Table through linked Service\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%spark \n",
+					"   \n",
+					"spark.sql(\n",
+					"      s\"\"\"create table DemoCosmosDB using cosmos.olap options(\n",
+					"        | spark.cosmos.synapse.linkedServiceName 'CosmosDBLink',\n",
+					"        | spark.cosmos.region 'west us 2',\n",
+					"        | spark.cosmos.databaseName 'sample-db-001',\n",
+					"        | spark.cosmos.containerName 'sample-container-001')\n",
+					"      \"\"\".stripMargin)\n",
+					"      "
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%spark\n",
+					"spark.sql(\"SELECT count(*) FROM DemoCosmosDB\").show()"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"diagram": {
+						"activateDiagramType": 1,
+						"chartConfig": {
+							"category": "bar",
+							"keys": [],
+							"values": [],
+							"yLabel": "",
+							"xLabel": "",
+							"aggregation": "COUNT",
+							"aggByBackend": false
+						},
+						"previewData": {
+							"filter": null
+						},
+						"aggData": "{}",
+						"isSummary": false,
+						"isSql": true
+					}
+				},
+				"source": [
+					"%%sql\n",
+					"SELECT * FROM democosmosdb limit 10"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Flatten Cosmos DB schema\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import col\n",
+					"\n",
+					"\n",
+					"def flatten_df(nested_df):\n",
+					"    stack = [((), nested_df)]\n",
+					"    columns = []\n",
+					"\n",
+					"    while len(stack) > 0:\n",
+					"        parents, df = stack.pop()\n",
+					"\n",
+					"        flat_cols = [\n",
+					"            col(\".\".join(parents + (c[0],))).alias(\"_\".join(parents + (c[0],)))\n",
+					"            for c in df.dtypes\n",
+					"            if c[1][:6] != \"struct\"\n",
+					"        ]\n",
+					"\n",
+					"        nested_cols = [\n",
+					"            c[0]\n",
+					"            for c in df.dtypes\n",
+					"            if c[1][:6] == \"struct\"\n",
+					"        ]\n",
+					"\n",
+					"        columns.extend(flat_cols)\n",
+					"\n",
+					"        for nested_col in nested_cols:\n",
+					"            projected_df = df.select(nested_col + \".*\")\n",
+					"            stack.append((parents + (nested_col,), projected_df))\n",
+					"\n",
+					"    return nested_df.select(columns)"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.types import StringType, StructField, StructType\n",
+					"df_retail_data_flat = flatten_df(df_retail_data)"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"diagram": {
+						"activateDiagramType": 1,
+						"chartConfig": {
+							"category": "bar",
+							"keys": [
+								"_rid"
+							],
+							"values": [
+								"_rid"
+							],
+							"yLabel": "_rid",
+							"xLabel": "_rid",
+							"aggregation": "COUNT",
+							"aggByBackend": false
+						},
+						"previewData": {
+							"filter": null
+						},
+						"aggData": "{\"_rid\":{\"o9tdAL4WfHF0HwEAAAAAAA==\":1,\"o9tdAL4WfHF1HwEAAAAAAA==\":1,\"o9tdAL4WfHF2HwEAAAAAAA==\":1,\"o9tdAL4WfHF3HwEAAAAAAA==\":1,\"o9tdAL4WfHF4HwEAAAAAAA==\":1,\"o9tdAL4WfHF5HwEAAAAAAA==\":1,\"o9tdAL4WfHFwHwEAAAAAAA==\":1,\"o9tdAL4WfHFxHwEAAAAAAA==\":1,\"o9tdAL4WfHFyHwEAAAAAAA==\":1,\"o9tdAL4WfHFzHwEAAAAAAA==\":1}}",
+						"isSummary": false,
+						"isSql": false
+					}
+				},
+				"source": [
+					"display(df_retail_data_flat.limit(10))"
+				],
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_retail_data_flat.printSchema()"
+				],
+				"execution_count": 29
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Explode and flatten the array\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"diagram": {
+						"activateDiagramType": 1,
+						"chartConfig": {
+							"category": "bar",
+							"keys": [
+								"username"
+							],
+							"values": [
+								"username"
+							],
+							"yLabel": "username",
+							"xLabel": "username",
+							"aggregation": "COUNT",
+							"aggByBackend": false
+						},
+						"previewData": {
+							"filter": null
+						},
+						"aggData": "{\"username\":{\"Ford_Fadel39\":1,\"Maurice_Sawayn\":3,\"Tiffany.Dibbert\":3,\"Troy64\":3}}",
+						"isSummary": false,
+						"isSql": false
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import explode\n",
+					"from pyspark.sql.functions import flatten\n",
+					"from pyspark.sql.functions import arrays_zip\n",
+					"df_retail_data_flat_explode = df_retail_data_flat.select(\"username\",\"email\",\"phone\",\"website\",explode(df_retail_data_flat.accountHistory)).select(\"username\",\"email\",\"phone\",\"website\",\"col.*\")\n",
+					"display(df_retail_data_flat_explode.limit(10))"
+				],
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_retail_data_flat_explode.count()"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import unix_timestamp, from_unixtime\n",
+					"from pyspark.sql.types import TimestampType\n",
+					"df_retail_data_converted = df_retail_data_flat_explode.select(col('username'),col('email'),col('phone'),col('website'),df_retail_data_flat_explode.amount.cast('int').alias('revenue'),col('date').substr(1, 10).alias('date'),col('type'))"
+				],
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"diagram": {
+						"activateDiagramType": 1,
+						"chartConfig": {
+							"category": "bar",
+							"keys": [
+								"username"
+							],
+							"values": [
+								"revenue"
+							],
+							"yLabel": "revenue",
+							"xLabel": "username",
+							"aggregation": "SUM",
+							"aggByBackend": false
+						},
+						"previewData": {
+							"filter": null
+						},
+						"aggData": "{\"revenue\":{\"Ford_Fadel39\":340,\"Maurice_Sawayn\":1635,\"Tiffany.Dibbert\":1183,\"Troy64\":1433}}",
+						"isSummary": false,
+						"isSql": false
+					}
+				},
+				"source": [
+					"display(df_retail_data_converted.limit(10))"
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_retail_data_converted.printSchema()"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Write the Dataframe back to a collection in Cosmos DB\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"writeConfig = {\n",
+					"    \"Endpoint\": \"https://tonio-analytical-store-test-001.documents.azure.com:443/\",\n",
+					"    \"Masterkey\": \"Jg56u8htxwccEV2ysk8MmvoAkreIFhfKoQ0iqSeunTtjc2J41VqMEqKBKabv8rHaeVgedc0CdB6nqKLC0mP41A==\",\n",
+					"    \"Database\": \"sample-db-001\",\n",
+					"    \"Collection\": \"arnaud_test\",\n",
+					"    \"Upsert\": \"true\"\n",
+					" }\n",
+					" \n",
+					"df_retail_data_converted.write.format(\"cosmos.oltp\").mode('Append').options(**writeConfig).save()"
+				],
+				"execution_count": 35
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Copy to a SQL pool"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%spark\n",
+					"val df = spark.sql(\"SELECT * FROM default.CosmoDBLink\")"
+				],
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%spark\n",
+					"df.write.sqlanalytics(\"contososqlpool.dbo.CosmoDBLink\", Constants.INTERNAL)"
+				],
+				"execution_count": 37
+			}
+		]
+	}
+}

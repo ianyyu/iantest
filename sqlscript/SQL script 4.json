@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 1",
+	"name": "SQL script 4",
 	"properties": {
 		"content": {
-			"query": "-- type your sql script here, we now have intellisense\n",
+			"query": "",
 			"metadata": {
 				"language": "sql"
 			},

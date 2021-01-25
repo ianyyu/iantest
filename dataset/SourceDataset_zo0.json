@@ -1,0 +1,51 @@
+{
+	"name": "SourceDataset_zo0",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Source Datasets Josh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "dimGeography.parquet",
+				"folderPath": "Data/NYCTaxiSample",
+				"fileSystem": "synapsecontainer"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "GeographyID",
+				"type": "INT32"
+			},
+			{
+				"name": "ZipCodeBKey",
+				"type": "UTF8"
+			},
+			{
+				"name": "County",
+				"type": "UTF8"
+			},
+			{
+				"name": "City",
+				"type": "UTF8"
+			},
+			{
+				"name": "State",
+				"type": "UTF8"
+			},
+			{
+				"name": "Country",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZipCode",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

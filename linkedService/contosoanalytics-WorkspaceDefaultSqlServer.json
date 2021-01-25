@@ -1,0 +1,16 @@
+{
+	"name": "contosoanalytics-WorkspaceDefaultSqlServer",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"typeProperties": {
+			"connectionString": "Data Source=tcp:contosoanalytics.database.windows.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"parameters": {
+			"DBName": {
+				"type": "String"
+			}
+		},
+		"type": "AzureSqlDW",
+		"annotations": []
+	}
+}
