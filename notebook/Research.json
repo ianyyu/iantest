@@ -1,0 +1,172 @@
+{
+	"name": "Research",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "aduxsparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 1
+		},
+		"metadata": {
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/58f8824d-32b0-4825-9825-02fa6a801546/resourceGroups/AzureDataUXDesign/providers/Microsoft.Synapse/workspaces/aduxdesignworkspace/bigDataPools/aduxsparkpool",
+				"name": "aduxsparkpool",
+				"type": "Spark",
+				"endpoint": "https://aduxdesignworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aduxsparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 1 - Put some data into the lake\n",
+					"- Creatre a folder called `ingested` in a container\n",
+					"- upload Searchlog.csv into the that folder\n",
+					"\n",
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 2 - Load Searchlog.csv into a dataframe\n",
+					"\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%pyspark\n",
+					"df0 = spark.read.load('abfss://data@arcadialake.dfs.core.windows.net/ingested/SearchLog.csv', format=\"csv\"\n",
+					", header=True\n",
+					", inferSchema='true'\n",
+					")\n",
+					"df0.show(10)"
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 3 - Verify the schema of the dataframe\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"print(df0.schema)"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 4 - delete the destination table\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_temp = spark.sql(\"DROP TABLE IF EXISTS searchlog\")"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 5 - Save the dataframe into the table\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df0.write.saveAsTable(\"searchlog\")"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df = spark.sql(\"SELECT 100/(Latency-614) AS InvLatency FROM default.searchlog LIMIT 5\")\n",
+					"df.show(100)"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 6 - Do some basic analysis\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_top5_by_latency = spark.sql(\"SELECT * FROM default.searchlog ORDER BY latency DESC LIMIT 5\")\n",
+					"# alternaitvely - df_top5_by_latency = df0.orderBy( \"latency\", ascending = False ).limit(5)\n",
+					"df_top5_by_latency.show()"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 7 - Summarize latency by market\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df_latency_by_market = spark.sql(\"SELECT market, AVG(latency) AS avg_latency FROM default.searchlog GROUP BY market ORDER BY avg_latency DESC\")\n",
+					"df_latency_by_market.show()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 8 -  Explorte latency by market visually\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"display(df_latency_by_market)"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Step 9 - Export the notebook and send \n",
+					""
+				]
+			}
+		]
+	}
+}

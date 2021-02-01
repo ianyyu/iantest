@@ -1,0 +1,16 @@
+{
+	"name": "CreateExternalStreamDDL",
+	"properties": {
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense\n \n/* Create EXTERNAL stream for input */\nCREATEDATABASE SCOPED CREDENTIAL eventHubCredName \nWITHIDENTITY = 'Shared Access Signature’, \nSECRET = '<policyName>'; \n \nCREATE EXTERNAL DATA SOURCE MyEventHub_tweets \nWITH \n(     \n  LOCATION = 'sb://my-sb-namespace.servicebus.windows.net’, \nCREDENTIAL = eventHubCredName \n); \n \nCREATEEXTERNALFILEFORMAT myFileFormat \nWITH ( \n    FORMAT_TYPE = 'CSV', \nDATA_COMPRESSION = 'GZIP', \n    ENCODING = ‘UTF-8’, \n    DELIMITER = ‘|’ \n); \n \nCREATEEXTERNAL STREAM Stream_A (user_idVARCHAR, tweet VARCHAR) \nWITH\n(  \n    DATA_SOURCE = MyEventHub_tweets, \n    LOCATION = ‘<topicname>’, \n--JSON: Format, CSV: Delimiter and Encoding, AVRO: None \n    EXTERNAL_FILE_FORMAT = myFileFormat,  \n    INPUT_OPTIONS =  \n        ‘CONSUMER_GROUP: FirstConsumerGroup’, \n); \n \n------------------------------------------------------------------\n/* Create EXTERNAL stream for static input data */\n \nCREATEDATABASE SCOPED CREDENTIAL StorageAcctCredName \nWITHIDENTITY = 'Shared Access Signature’, \nSECRET = 'AccountKey'; \n\n \nCREATE EXTERNAL DATA SOURCE MyBlobStorage_tweets_static_input \nWITH \n(     \n  LOCATION = abfss://    <container>@<storage_account>.dfs.core.windows.net’, \n  TYPE = BLOB_STORAGE,  \n  CREDENTIAL = eventHubCredName \n); \n \n\nCREATE EXTERNAL STREAM Stream_A_Test (user_id VARCHAR, tweet VARCHAR) \nWITH   \n(  \n    DATA_SOURCE = MyBlobStorage_tweets_static_input, \n    LOCATION = ‘<file_path>’, \n    EXTERNAL_FILE_FORMAT = myFileFormat,  \n); \n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "insert data persons",
+	"properties": {
+		"content": {
+			"query": "INSERT INTO Persons (PersonID, LastName, FirstName, Address, City)\nVALUES ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "aduxsqlpool1",
+				"type": "SqlCompute"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

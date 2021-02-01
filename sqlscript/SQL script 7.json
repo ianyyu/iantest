@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 7",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \nCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \nWITH ( FORMAT_TYPE = PARQUET)\nGO\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'data_arcadialake_dfs_core_windows_net') \nCREATE EXTERNAL DATA SOURCE [data_arcadialake_dfs_core_windows_net] \nWITH \n(    LOCATION   = 'abfss://data@arcadialake.dfs.core.windows.net', \n      TYPE       = HADOOP \n)\nGO\nCREATE EXTERNAL TABLE testtesttest \n(\n[id] bigint \n)\nWITH\n(\n LOCATION = 'test/delta/table/part-00000-fed96ac4-1548-45c6-a45d-a0cbb5523ff0-c000.snappy.parquet', \n DATA_SOURCE = [data_arcadialake_dfs_core_windows_net], \n FILE_FORMAT = [SynapseParquetFormat], \n REJECT_TYPE = VALUE, \n REJECT_VALUE = 0\n)\nGO\nSELECT TOP 100 * FROM testtesttest\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "aduxsqlpool1",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

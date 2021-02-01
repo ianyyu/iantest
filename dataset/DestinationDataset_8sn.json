@@ -1,0 +1,20 @@
+{
+	"name": "DestinationDataset_8sn",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "aduxdesignworkspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "what",
+				"fileSystem": "data"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

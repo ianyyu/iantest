@@ -1,0 +1,155 @@
+{
+	"name": "Template - Data Processing",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2
+		},
+		"metadata": {
+			"language_info": {
+				"name": "python"
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Title\n",
+					"The title of the notebook.\n",
+					"\n",
+					"## Purpose\n",
+					"State the purpose of the notebook.\n",
+					"\n",
+					"## Methodology\n",
+					"Quickly describe assumptions and processing steps.\n",
+					"\n",
+					"\n",
+					"## Results\n",
+					"Describe and comment the most important results.\n",
+					"\n",
+					"## Next steps\n",
+					"State suggested next steps, based on results obtained in this notebook."
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Setup"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Import libararies\n",
+					"\n",
+					"# Data manipulation\n",
+					"from pyspark.sql import SparkSession\n",
+					"from pyspark.sql.types import *\n",
+					"from pyspark.sql.functions import *\n",
+					"\n",
+					"import numpy as np\n",
+					"\n",
+					"# Visualizations\n",
+					"import matplotlib.pyplot as plt\n",
+					"\n",
+					"import seaborn as sns\n",
+					"\n",
+					"from bokeh.plotting import figure, show\n",
+					"from bokeh.io import output_notebook\n",
+					"from bokeh.embed import file_html\n",
+					"from bokeh.resources import CDN\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Parameters"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"input_path = \" \" # Fill in your input path\n",
+					"output_path = \" \" # Fill in your output path"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Data import\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Load data\n",
+					"df = spark.read.load(input_path,\\\n",
+					"                     format='csv',\\\n",
+					"                     header = True,\\\n",
+					"                     quote = \"\\\"\",\\\n",
+					"                     escape = \"\\\"\",\\\n",
+					"                     multiLine = True\n",
+					"                     )"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Preview data content\n",
+					"display(df.limit(5))"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# View the data statistics \n",
+					"display(df, summary = True)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Data processing\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Put here the core of the notebook\n",
+					"\n",
+					"df_result = df.select([\"col1\",\"col2\",\"col3\"])"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Save result\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Save result to the output path\n",
+					"\n",
+					"df_result.write.format(\"parquet\").mode(\"overwrite\").save(output_path)"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}

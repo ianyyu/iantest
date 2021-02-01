@@ -1,0 +1,16 @@
+{
+	"name": "StreamingQuery",
+	"properties": {
+		"content": {
+			"query": "-----------------------------------------------------------------------\n/* Test the streaming job using static input data by running the following stored procedure */\nEXEC Sp_create_streaming_job\n    @JobName = 'myStreamingJobForTest',\n    @stmt = \n        /* Replace the [Input] from the list below:\n           Input: myinput1(sample)\n        */\n        SELECT TOP 1000 *\n        FROM [Input]\nEXEC Sp_start_streaming_job\n    @JobName = 'myStreamingJobForTest',\n    @OutputStartTime = 'NOW',\n--------------------------------------------------------------------------\n/* Create the streaming job by running the following stored procedure */\nEXEC Sp_create_streaming_job\n    @JobName = 'myStreamingJob',\n    @stmt = \n        /* Replace the [Input] and [Output] from the list below:\n           Input: myinput1\n           Output: myoutput\n        */\n        INSERT INTO [Output]\n        SELECT *\n        FROM [Input]\n/* Start the streaming job by running the following stored procedure */\nEXEC Sp_start_streaming_job\n    @JobName = 'myStreamingJob',\n    @OutputStartTime = 'NOW',\n    @Resources = 'DW10s'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

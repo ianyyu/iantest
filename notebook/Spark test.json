@@ -1,0 +1,106 @@
+{
+	"name": "Spark test",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "cactus",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/58f8824d-32b0-4825-9825-02fa6a801546/resourceGroups/AzureDataUXDesign/providers/Microsoft.Synapse/workspaces/aduxdesignworkspace/bigDataPools/cactus",
+				"name": "cactus",
+				"type": "Spark",
+				"endpoint": "https://aduxdesignworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/cactus",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# NYC Taxi Fare Price Prediction\n",
+					"## Build a regression model with spark mllib\n",
+					"\n",
+					"\n",
+					"- Load joined data from ADLS Gen2\n",
+					"- Data understanding\n",
+					"- Train a machine learning regression model using Spark mllib\n",
+					"- Caculate model accuracy\n",
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#Load training data from ADLS Gen2\n",
+					"from pyspark.sql import SparkSession\n",
+					"from pyspark.sql.types import * \n",
+					"\n",
+					"adls_path = 'abfss://users@arcadialake.dfs.core.windows.net/ruxu/taxi_holiday_weather_final_df/*.csv'\n",
+					"\n",
+					"spark.conf.set(\"fs.azure.account.auth.type.arcadialake.dfs.core.windows.net\", \"SharedKey\")\n",
+					"spark.conf.set(\"fs.azure.account.key.arcadialake.dfs.core.windows.net\",\"EWI0w9mAhyvBtczCWogPhJxGH/w3HRLzClnyVkmnvzucYp+N9zYZf5lzd3hHTfGMfyh3Au7Z3TzEy5ufWRoU5w==\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true,
+					"outputCollapsed": true
+				},
+				"source": [
+					"df = spark.read.option('header', 'true') \\\n",
+					"                .option('delimiter', ',') \\\n",
+					"                .option('inferSchema', 'true')\\\n",
+					"                .csv(adls_path)\n",
+					"df.count()\n",
+					"df.printSchema()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"display(df)"
+				],
+				"execution_count": 5
+			}
+		]
+	}
+}

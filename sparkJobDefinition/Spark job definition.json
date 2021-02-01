@@ -1,0 +1,26 @@
+{
+	"name": "Spark job definition",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "cactus",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "python",
+		"jobProperties": {
+			"name": "Spark job definition",
+			"file": "abfss://data@arcadialake.dfs.core.windows.net/japai/wordcount.py",
+			"args": [
+				"abfss://data@arcadialake.dfs.core.windows.net/japai/result/",
+				"abfss://data@arcadialake.dfs.core.windows.net/japai/shakespeare.txt"
+			],
+			"jars": [],
+			"files": [],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 3
+		}
+	}
+}

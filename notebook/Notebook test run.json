@@ -1,0 +1,75 @@
+{
+	"name": "Notebook test run",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "aduxsparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 1
+		},
+		"metadata": {
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/58f8824d-32b0-4825-9825-02fa6a801546/resourceGroups/AzureDataUXDesign/providers/Microsoft.Synapse/workspaces/aduxdesignworkspace/bigDataPools/aduxsparkpool",
+				"name": "aduxsparkpool",
+				"type": "Spark",
+				"endpoint": "https://aduxdesignworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aduxsparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"```language\n",
+					"* ## Cell titl\n",
+					"```\n",
+					"e\n",
+					"1. * Item 1\n",
+					"* Item 2\n",
+					"* Item 3"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import numpy as np \n",
+					"import pandas as pd \n",
+					"from pyspark.sql import * \n",
+					"d = {'col11': [1, 2, 3, 4, 5, 6, 7, 8], 'col12': [3, 4, 5, 6, 8, 3, 16, 20]} \n",
+					"pdf = pd.DataFrame(data=d) \n",
+					"display(pdf)\n",
+					""
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Cell title\n"
+				]
+			}
+		]
+	}
+}

@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 1",
+	"name": "SQL script 1_Copy1_Copy1_Copy1_Copy1_Copy1",
 	"properties": {
 		"content": {
 			"query": "%%pyspark\ndf0 = spark.read.load('abfss://data@arcadialake.dfs.core.windows.net/ingested/SearchLog.csv', format=\"csv\"\n, header=True\n, inferSchema='true'\n)\ndf0.show(10)\n",
@@ -7,8 +7,8 @@
 				"language": "sql"
 			},
 			"currentConnection": {
-				"poolName": "Built-in",
-				"databaseName": "default"
+				"name": "aduxsqlpool1",
+				"type": "SqlPool"
 			}
 		},
 		"type": "SqlQuery"

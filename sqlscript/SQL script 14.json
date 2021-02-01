@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 2",
+	"name": "SQL script 14",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (1000) [PersonID]\n,[LastName]\n,[FirstName]\n,[Address]\n,[City]\n FROM [dbo].[testing]",
+			"query": "",
 			"metadata": {
 				"language": "sql"
 			},

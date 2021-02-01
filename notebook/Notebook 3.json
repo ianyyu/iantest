@@ -8,22 +8,17 @@
 			"driverCores": 4,
 			"executorMemory": "28g",
 			"executorCores": 4,
-			"numExecutors": 2
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
 		},
 		"metadata": {
 			"language_info": {
 				"name": "python"
 			}
 		},
-		"cells": [
-			{
-				"cell_type": "code",
-				"source": [
-					"import pandas asdfaw "
-				],
-				"attachments": null,
-				"execution_count": null
-			}
-		]
+		"cells": []
 	}
 }

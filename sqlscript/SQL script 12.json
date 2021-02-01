@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 12",
+	"properties": {
+		"content": {
+			"query": "CREATE DATABASE SCOPED CREDENTIAL eventHubCredName \nWITH IDENTITY = 'Shared Access Signature’, \nSECRET = '<policyName>'; \nCREATE EXTERNAL DATA SOURCE MyEventHub_tweets \nWITH \n(     \n  LOCATION = 'sb://my-sb-namespace.servicebus.windows.net’, \n  CREDENTIAL = eventHubCredName \n); \nCREATE EXTERNAL FILE FORMAT myFileFormat \nWITH ( \n    FORMAT_TYPE = 'CSV', \n    DATA_COMPRESSION = 'GZIP', \n    ENCODING = ‘UTF-8’, \n    DELIMITER = ‘|’ \n); \nCREATE EXTERNAL STREAM myinput1 (user_id VARCHAR, tweet VARCHAR) \nWITH   \n(  \n    DATA_SOURCE = MyEventHub_tweets, \n    LOCATION = ‘<topicname>’, \n   --JSON: Format, CSV: Delimiter and Encoding, AVRO: None \n    EXTERNAL_FILE_FORMAT = myFileFormat,  \n    INPUT_OPTIONS =  \n      ‘CONSUMER_GROUP: FirstConsumerGroup’, \n    OUTPUT_OPTIONS =  \n      ‘REJECT_TYPE: Drop, \n      PARTITION_KEY_COLUMN: , \n      PROPERTY_COLUMNS: ()’ \n); ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "aduxsqlpool1",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

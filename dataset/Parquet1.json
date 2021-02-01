@@ -1,0 +1,27 @@
+{
+	"name": "Parquet1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "aduxdesignworkspace-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "part-00000-077e6a05-cba4-45a2-a39e-f9c1940d07cc-c000.snappy.parquet",
+				"folderPath": "anfog/sql/test/path",
+				"fileSystem": "data"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "id",
+				"type": "INT64"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

@@ -1,0 +1,11 @@
+{
+	"name": "aduxdesignworkspace-WorkspaceDefaultStorage",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://arcadialake.dfs.core.windows.net"
+		},
+		"annotations": []
+	}
+}

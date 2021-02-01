@@ -1,0 +1,770 @@
+{
+	"name": "Beyond Plain Python",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 1,
+		"bigDataPool": {
+			"referenceName": "aduxsparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2
+		},
+		"metadata": {
+			"kernelspec": {
+				"name": "python3",
+				"display_name": "Python 3"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/58f8824d-32b0-4825-9825-02fa6a801546/resourceGroups/AzureDataUXDesign/providers/Microsoft.Synapse/workspaces/aduxdesignworkspace/bigDataPools/aduxsparkpool",
+				"name": "aduxsparkpool",
+				"type": "Spark",
+				"endpoint": "https://aduxdesignworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aduxsparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"# IPython: beyond plain Python"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"When executing code in IPython, all valid Python syntax works as-is, but IPython provides a number of features designed to make the interactive experience more fluid and efficient."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"## First things first: running code, getting help"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"In the notebook, to run a cell of code, hit `Shift-Enter`. This executes the cell and puts the cursor in the next cell below, or makes a new one if you are at the end.  Alternately, you can use:\n",
+					"    \n",
+					"- `Alt-Enter` to force the creation of a new cell unconditionally (useful when inserting new content in the middle of an existing notebook).\n",
+					"- `Control-Enter` executes the cell and keeps the cursor in the same cell, useful for quick experimentation of snippets that you don't need to keep permanently."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"print(\"Hi\")"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"Getting help:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"?"
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"Typing `object_name?` will print all sorts of details about any object, including docstrings, function definition lines (for call arguments) and constructor details for classes."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import collections\n",
+					"collections.namedtuple?"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"collections.Counter??"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"*int*?"
+				],
+				"attachments": null,
+				"execution_count": 7
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"An IPython quick reference card:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%quickref"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"## Tab completion"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Tab completion, especially for attributes, is a convenient way to explore the structure of any object you’re dealing with. Simply type `object_name.<TAB>` to view the object’s attributes. Besides Python objects and keywords, tab completion also works on file and directory names."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"collections."
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"## The interactive workflow: input, output, history"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"2+10"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"_+10"
+				],
+				"attachments": null,
+				"execution_count": 10
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"You can suppress the storage and rendering of output if you append `;` to the last cell (this comes in handy when plotting with matplotlib, for example):"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"10+20;"
+				],
+				"attachments": null,
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"_"
+				],
+				"attachments": null,
+				"execution_count": 12
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"The output is stored in `_N` and `Out[N]` variables:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"_10 == Out[10]"
+				],
+				"attachments": null,
+				"execution_count": 13
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Previous inputs are available, too:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "-"
+					}
+				},
+				"source": [
+					"In[11]"
+				],
+				"attachments": null,
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"_i"
+				],
+				"attachments": null,
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%history -n 1-5"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "subslide"
+					}
+				},
+				"source": [
+					"**Exercise**\n",
+					"\n",
+					"Write the last 10 lines of history to a file named `log.py`."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"slideshow": {
+						"slide_type": "slide"
+					}
+				},
+				"source": [
+					"## Accessing the underlying operating system"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"!pwd"
+				],
+				"attachments": null,
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"files = !ls\n",
+					"print(\"My current directory's files:\")\n",
+					"print(files)"
+				],
+				"attachments": null,
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"!echo $files"
+				],
+				"attachments": null,
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"!echo {files[0].upper()}"
+				],
+				"attachments": null,
+				"execution_count": 19
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Note that all this is available even in multiline blocks:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import os\n",
+					"for i,f in enumerate(files):\n",
+					"    if f.endswith('ipynb'):\n",
+					"        !echo {\"%02d\" % i} - \"{os.path.splitext(f)[0]}\"\n",
+					"    else:\n",
+					"        print('--')"
+				],
+				"attachments": null,
+				"execution_count": 20
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Beyond Python: magic functions"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"The IPyhton 'magic' functions are a set of commands, invoked by prepending one or two `%` signs to their name, that live in a namespace separate from your normal Python variables and provide a more command-like interface.  They take flags with `--` and arguments without quotes, parentheses or commas. The motivation behind this system is two-fold:\n",
+					"    \n",
+					"- To provide an orthogonal namespace for controlling IPython itself and exposing other system-oriented functionality.\n",
+					"\n",
+					"- To expose a calling mode that requires minimal verbosity and typing while working interactively.  Thus the inspiration taken from the classic Unix shell style for commands."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%magic"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Line vs cell magics:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%timeit list(range(1000))"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%timeit\n",
+					"list(range(10))\n",
+					"list(range(100))"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Line magics can be used even inside code blocks:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"for i in range(1, 5):\n",
+					"    size = i*100\n",
+					"    print('size:', size, end=' ')\n",
+					"    %timeit list(range(size))"
+				],
+				"attachments": null,
+				"execution_count": 21
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Magics can do anything they want with their input, so it doesn't have to be valid Python:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%bash\n",
+					"echo \"My shell is:\" $SHELL\n",
+					"echo \"My disk usage is:\"\n",
+					"df -h"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Another interesting cell magic: create any file you want locally from the notebook:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%writefile test.txt\n",
+					"This is a test file!\n",
+					"It can contain anything I want...\n",
+					"\n",
+					"And more..."
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"!cat test.txt"
+				],
+				"attachments": null,
+				"execution_count": 22
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Let's see what other magics are currently defined in the system:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%lsmagic"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Running normal Python code: execution and errors"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Not only can you input normal Python code, you can even paste straight from a Python or IPython shell session:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					">>> # Fibonacci series:\n",
+					"... # the sum of two elements defines the next\n",
+					"... a, b = 0, 1\n",
+					">>> while b < 10:\n",
+					"...     print(b)\n",
+					"...     a, b = b, a+b"
+				],
+				"attachments": null,
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"In [1]: for i in range(10):\n",
+					"   ...:     print(i, end=' ')\n",
+					"   ...:     "
+				],
+				"attachments": null,
+				"execution_count": 24
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"And when your code produces errors, you can control how they are displayed with the `%xmode` magic:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%writefile mod.py\n",
+					"\n",
+					"def f(x):\n",
+					"    return 1.0/(x-1)\n",
+					"\n",
+					"def g(y):\n",
+					"    return f(y+1)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Now let's call the function `g` with an argument that would produce an error:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import mod\n",
+					"mod.g(0)"
+				],
+				"attachments": null,
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%xmode plain\n",
+					"mod.g(0)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%xmode verbose\n",
+					"mod.g(0)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"The default `%xmode` is \"context\", which shows additional context but not all local variables.  Let's restore that one for the rest of our session."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%xmode context"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Running code in other languages with special `%%` magics"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%perl\n",
+					"@months = (\"July\", \"August\", \"September\");\n",
+					"print $months[0];"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%ruby\n",
+					"name = \"world\"\n",
+					"puts \"Hello #{name.capitalize}!\""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Raw Input in the notebook"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Since 1.0 the IPython notebook web application support `raw_input` which for example allow us to invoke the `%debug` magic in the notebook:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"mod.g(0)"
+				],
+				"attachments": null,
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%debug"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"Don't foget to exit your debugging session. Raw input can of course be use to ask for user input:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"enjoy = input('Are you enjoying this tutorial? ')\n",
+					"print('enjoy is:', enjoy)"
+				],
+				"attachments": null,
+				"execution_count": 27
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Plotting in the notebook"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"This magic configures matplotlib to render its figures inline:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%matplotlib inline"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import numpy as np\n",
+					"import matplotlib.pyplot as plt"
+				],
+				"attachments": null,
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"x = np.linspace(0, 2*np.pi, 300)\n",
+					"y = np.sin(x**2)\n",
+					"plt.plot(x, y)\n",
+					"plt.title(\"A little chirp\")\n",
+					"fig = plt.gcf()  # let's keep the figure object around for later..."
+				],
+				"attachments": null,
+				"execution_count": 29
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## The IPython kernel/client model"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%connect_info"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"We can connect automatically a Qt Console to the currently running kernel with the `%qtconsole` magic, or by typing `ipython console --existing <kernel-UUID>` in any terminal:"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%qtconsole"
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

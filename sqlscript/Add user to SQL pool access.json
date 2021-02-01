@@ -1,0 +1,16 @@
+{
+	"name": "Add user to SQL pool access",
+	"properties": {
+		"content": {
+			"query": "CREATE USER [mahi@microsoft.com] FROM EXTERNAL PROVIDER;\nEXEC sp_addrolemember 'db_owner', 'mahi@microsoft.com'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "aduxsqlpool1",
+				"type": "SqlCompute"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

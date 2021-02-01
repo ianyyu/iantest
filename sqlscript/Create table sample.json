@@ -1,0 +1,16 @@
+{
+	"name": "Create table sample",
+	"properties": {
+		"content": {
+			"query": "select PersonID from dbo.Persons",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "aduxsqlpool1",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

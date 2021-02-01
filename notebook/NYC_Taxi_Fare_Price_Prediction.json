@@ -1,0 +1,425 @@
+{
+	"name": "NYC_Taxi_Fare_Price_Prediction",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "aduxsparkpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2
+		},
+		"metadata": {
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/58f8824d-32b0-4825-9825-02fa6a801546/resourceGroups/AzureDataUXDesign/providers/Microsoft.Synapse/workspaces/aduxdesignworkspace/bigDataPools/aduxsparkpool",
+				"name": "aduxsparkpool",
+				"type": "Spark",
+				"endpoint": "https://aduxdesignworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/aduxsparkpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# NYC Taxi Fare Price Prediction\n",
+					"## Build a regression model with spark mllib\n",
+					"\n",
+					"\n",
+					"- Load joined data from ADLS Gen2\n",
+					"- Data understanding\n",
+					"- Train a machine learning regression model using Spark mllib\n",
+					"- Caculate model accuracy\n",
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Load Training Data\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#Load training data from ADLS Gen2\n",
+					"from pyspark.sql import SparkSession\n",
+					"from pyspark.sql.types import * \n",
+					"\n",
+					"adls_path = 'abfss://users@arcadialake.dfs.core.windows.net/ruxu/taxi_holiday_weather_final_df/*.csv'\n",
+					"\n",
+					"spark.conf.set(\"fs.azure.account.auth.type.arcadialake.dfs.core.windows.net\", \"SharedKey\")\n",
+					"spark.conf.set(\"fs.azure.account.key.arcadialake.dfs.core.windows.net\",\"EWI0w9mAhyvBtczCWogPhJxGH/w3HRLzClnyVkmnvzucYp+N9zYZf5lzd3hHTfGMfyh3Au7Z3TzEy5ufWRoU5w==\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"df = spark.read.option('header', 'true') \\\n",
+					"                .option('delimiter', ',') \\\n",
+					"                .option('inferSchema', 'true')\\\n",
+					"                .csv(adls_path)\n",
+					"df.count()\n",
+					"df.printSchema()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"display(df)"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Data Understanding\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df.describe(\"Total_amount\",\"Trip_distance\",\"Passenger_count\",\"Pickup_latitude\",\"Pickup_longitude\",\"avg(temperature)\",\"avg(snowDepth)\").show()"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import * "
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"# Mean and standard deviation of total_amount by different Passenger\n",
+					"final_avg_df = df.groupBy('Passenger_count').agg(avg('Total_amount'))\n",
+					"final_avg_df.sort('Passenger_count').show()"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df.groupBy('Passenger_count').agg(stddev('Total_amount')).sort('Passenger_count').show()"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"# Which holiday have high median prices\n",
+					"final_by_holiday_df = df.groupBy('holidayName').agg(avg('Total_amount')).sort( desc( 'avg(Total_amount)') )\n",
+					"final_by_holiday_df.show(truncate = False)"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#total amount of money by each week day\n",
+					"df_byweekday = df.groupBy('day_of_week').agg(sum('Total_amount'))\n",
+					"df_byweekday.sort('day_of_week').show()"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"display(df_byweekday)"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import *"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#total ammount of money by each day\n",
+					"df_bymonthday = df.groupBy('day_of_month').agg(sum('Total_amount'))\n",
+					"df_bymonthday.sort('day_of_month').show(50)"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"from bokeh.plotting import figure \n",
+					"from bokeh.embed import components, file_html \n",
+					"from bokeh.resources import CDN \n",
+					"# prepare some data \n",
+					"x = [i for i in range(31)]\n",
+					"#x = df_bymonthday.select('day_of_month').take(31)\n",
+					"y = df_bymonthday.select('sum(Total_amount)').take(31)\n",
+					"# create a new plot with a title and axis labels \n",
+					"p = figure(title=\"simple line example\", x_axis_label='x', y_axis_label='y') \n",
+					"# add a line renderer with legend and line thickness \n",
+					"p.line(x, y, legend=\"Temp.\", line_width=2) \n",
+					"# create an html document that embeds the Bokeh plot \n",
+					"html = file_html(p, CDN, \"my plot1\") \n",
+					"# display this html \n",
+					"displayHTML(html) "
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Train Model"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#Importing packages\n",
+					"from pyspark.ml import Pipeline\n",
+					"from pyspark.ml.classification import LogisticRegression\n",
+					"from pyspark.ml.regression import LinearRegression\n",
+					"from pyspark.ml.feature import HashingTF, Tokenizer\n",
+					"\n",
+					"from pyspark.sql import Row\n",
+					"from pyspark.sql.functions import mean, min, max\n",
+					"from pyspark.sql.functions import avg, stddev\n",
+					"from pyspark.sql.functions import desc\n",
+					"\n",
+					"import os\n",
+					"import sys\n",
+					"from pyspark.sql.types import *\n",
+					"\n",
+					"from pyspark.mllib.classification import LogisticRegressionWithSGD\n",
+					"from pyspark.mllib.regression import LabeledPoint\n",
+					"\n",
+					"import numpy as np\n",
+					"from numpy import array"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Feature Engineering\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#define relevant features for prediction\n",
+					"featureCols = ['Trip_distance','Passenger_count','Pickup_latitude','Pickup_longitude','avg(temperature)']"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler\n",
+					"from pyspark.ml import Pipeline\n",
+					"from pyspark.ml.regression import LinearRegression"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#Preparing for model building: \n",
+					"# 1) The dataframe need to have two columns: features and label \n",
+					"# 2) The vector columns need to be named as features\n",
+					"# 3) The target variable need to be named as label \n",
+					"# 4) Then the dataframe can be directly fed to a model to learn\n",
+					"assembler = VectorAssembler( inputCols = featureCols, outputCol = \"features\")\n",
+					"df_train = assembler.transform(df )\n",
+					"df_train.select(\"features\")"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"df_train = df_train.withColumn( \"label\", df_train[\"Total_amount\"])\n",
+					"df_train.printSchema()"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"#Split the dataset\n",
+					"seed = 24\n",
+					"train_df, test_df = df_train.randomSplit( [0.7, 0.3], seed = seed )"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Model Building\n",
+					"\n",
+					"\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"# Build the Linear Regression Model\n",
+					"linreg = LinearRegression(maxIter=500, regParam=0.0)\n",
+					"model = linreg.fit(train_df)"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"#make predictions on test data and evaluate\n",
+					"y_pred = model.transform(test_df)"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"y_pred.select('features', 'Total_amount', 'label', 'prediction').show()"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Evaluation\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"# get evaluation metrics: R-squared and RMSE values\n",
+					"from pyspark.ml.evaluation import RegressionEvaluator\n",
+					"\n",
+					"def get_r2_rmse(model, test_df):\n",
+					"  y_pred = model.transform(test_df )\n",
+					"  #y_pred = y_pred.withColumn( \"y_pred\", exp( 'prediction' ) )\n",
+					"  rmse_evaluator = RegressionEvaluator(labelCol=\"Total_amount\",\n",
+					"                              predictionCol=\"prediction\",\n",
+					"                              metricName=\"rmse\" )\n",
+					"  r2_evaluator = RegressionEvaluator(labelCol=\"Total_amount\",\n",
+					"                              predictionCol=\"prediction\",\n",
+					"                              metricName=\"r2\" )\n",
+					"\n",
+					"  return [np.round( r2_evaluator.evaluate( y_pred ), 2), np.round( rmse_evaluator.evaluate( y_pred ), 2 )]"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"perf_params = get_r2_rmse(model, test_df)\n",
+					"perf_params"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"show_data = y_pred.select('Total_amount', 'label', 'prediction').toPandas()"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"inputCollapsed": true
+				},
+				"source": [
+					"from bokeh.plotting import figure \n",
+					"from bokeh.embed import components, file_html \n",
+					"from bokeh.resources import CDN \n",
+					"# prepare some data \n",
+					"x = [i for i in range(50)]\n",
+					"y = y_pred.select('prediction').take(50)\n",
+					"# create a new plot with a title and axis labels \n",
+					"p = figure(title=\"simple line example\", x_axis_label='x', y_axis_label='y') \n",
+					"# add a line renderer with legend and line thickness \n",
+					"p.line(x, y, legend=\"Temp.\", line_width=2) \n",
+					"# create an html document that embeds the Bokeh plot \n",
+					"html = file_html(p, CDN, \"my plot1\") \n",
+					"# display this html \n",
+					"displayHTML(html) "
+				],
+				"execution_count": 28
+			}
+		]
+	}
+}

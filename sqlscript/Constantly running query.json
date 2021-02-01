@@ -1,0 +1,17 @@
+{
+	"name": "Constantly running query",
+	"properties": {
+		"description": "Created so I can view monitoring of SQL OD requests",
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense\n\nWHILE 1=1\nBEGIN\nSELECT 'This will go forever'\nEND",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "aduxsqlpool1",
+				"databaseName": "aduxsqlpool1"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

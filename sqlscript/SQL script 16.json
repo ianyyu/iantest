@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 16",
+	"properties": {
+		"content": {
+			"query": "",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "aduxsqlpool1",
+				"databaseName": "aduxsqlpool1"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

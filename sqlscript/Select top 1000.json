@@ -1,0 +1,16 @@
+{
+	"name": "Select top 1000",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [PersonID]\n,[LastName]\n,[FirstName]\n,[Address]\n,[City]\n FROM [dbo].[Persons]\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "aduxsqlpool1",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}
