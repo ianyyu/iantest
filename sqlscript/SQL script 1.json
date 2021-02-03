@@ -2,13 +2,13 @@
 	"name": "SQL script 1",
 	"properties": {
 		"content": {
-			"query": "%%pyspark\ndf0 = spark.read.load('abfss://data@arcadialake.dfs.core.windows.net/ingested/SearchLog.csv', format=\"csv\"\n, header=True\n, inferSchema='true'\n)\ndf0.show(10)\n",
+			"query": "",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
 				"poolName": "Built-in",
-				"databaseName": "default"
+				"databaseName": "master"
 			}
 		},
 		"type": "SqlQuery"

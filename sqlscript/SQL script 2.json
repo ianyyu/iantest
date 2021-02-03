@@ -2,13 +2,13 @@
 	"name": "SQL script 2",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (1000) [PersonID]\n,[LastName]\n,[FirstName]\n,[Address]\n,[City]\n FROM [dbo].[testing]",
+			"query": "",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"name": "master",
-				"type": "SqlOnDemand"
+				"poolName": "Built-in",
+				"databaseName": "master"
 			}
 		},
 		"type": "SqlQuery"
