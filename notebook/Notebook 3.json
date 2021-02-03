@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 2",
+	"name": "Notebook 3",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -33,7 +33,7 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"Hello world! "
+					""
 				],
 				"execution_count": null
 			}
