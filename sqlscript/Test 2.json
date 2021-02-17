@@ -1,0 +1,16 @@
+{
+	"name": "Test 2",
+	"properties": {
+		"content": {
+			"query": "Hello",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}
