@@ -1,0 +1,16 @@
+{
+	"name": "Test Script",
+	"properties": {
+		"content": {
+			"query": "hello world",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}
