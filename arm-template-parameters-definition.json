@@ -138,10 +138,6 @@
                 }
             }
         }
-    },
-    "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints": {
-        "properties": {
-            "*": "="
-        }
+   
     }
 }
