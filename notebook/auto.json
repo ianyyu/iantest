@@ -1,0 +1,88 @@
+{
+	"name": "auto",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"kernelspec": {
+				"name": "synapse_sparksql",
+				"display_name": "sql"
+			},
+			"language_info": {
+				"name": "sql"
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"azdata_cell_guid": "c28b6756-fcc6-403b-b824-a91132370e71",
+					"tags": [
+						"hide_input"
+					]
+				},
+				"source": [
+					"from notebookutils import display, displayHTML, enableMatplotlib\n",
+					"from notebookutils import mssparkutils\n",
+					"TokenLibrary = sc._jvm.com.microsoft.azure.synapse.tokenlibrary.TokenLibrary"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					},
+					"azdata_cell_guid": "82b52f9b-0e30-44e3-adbb-9ccb3ce94e31",
+					"tags": [
+						"hide_input"
+					]
+				},
+				"source": [
+					"%%spark\n",
+					"import com.microsoft.spark.sqlanalytics.utils.Constants\n",
+					"import org.apache.spark.sql.SqlAnalyticsConnector._"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "csharp"
+					},
+					"azdata_cell_guid": "23ba76fe-3e63-4bac-8ff5-3fc69549aee8",
+					"tags": [
+						"hide_input"
+					]
+				},
+				"source": [
+					"%%csharp\n",
+					"using static Microsoft.Spark.Extensions.Azure.Synapse.Analytics.Notebook.Visualization.Functions;\n",
+					"using Microsoft.Spark.Extensions.Azure.Synapse.Analytics.Notebook.MSSparkUtils;"
+				],
+				"attachments": null,
+				"execution_count": 7
+			}
+		]
+	}
+}
